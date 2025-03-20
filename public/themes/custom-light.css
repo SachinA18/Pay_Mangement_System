@@ -1,0 +1,36 @@
+:root {
+  --primary-color: #2a80ff;
+}
+
+html {
+  color: #0b2852;
+}
+
+.surface-section {
+  background-color: #eef2f9 !important;
+}
+
+.shadow {
+  box-shadow: 0px 1px 18px 0px #00000017;
+}
+
+.p-button-primary {
+  border-radius: 12px;
+  background: #2a80ff;
+}
+
+.dashed-divider {
+  border-top: dashed 1px #415066;
+}
+
+th {
+  background-color: #edf3ff;
+}
+
+.p-success {
+  color: #37b20b;
+}
+
+.p-button-outlined:hover {
+  background: #f8fafc !important;
+}
