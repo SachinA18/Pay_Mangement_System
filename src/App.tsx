@@ -38,6 +38,7 @@ import SettingsRoutes from "./routes/settings.routes";
 import Bills from "./pages/bills/bill";
 import BillForm from "./pages/bills/bill-form";
 import InvoicePreview from "./pages/invoice/invoice-preview";
+import SalesDashboard from "./pages/sales/dashboard";
 
 function App() {
   return (
@@ -84,6 +85,7 @@ function App() {
           <Route path="quotation-form/:id" element={<QuotationForm />} />
           <Route path="bills" element={<Bills />} />
           <Route path="bill-form/:id" element={<BillForm />} />
+          <Route path="sales-dashboard" element={<SalesDashboard />} />
         </Route>
         <Route path="/" element={<Navigate to="dashboard" />} />
       </Routes>

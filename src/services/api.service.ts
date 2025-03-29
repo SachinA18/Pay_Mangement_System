@@ -1,38 +1,57 @@
-import axios from "axios";
+import { getFirestore, collection, doc, getDoc, getDocs, setDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { app } from "./firebase.config";
 import ErrorHandler from "./error.handler";
 
 export default class ApiService {
-  //public baseURL = "https://localhost:7258/api";
-  public baseURL = "https://calculx-eaerhtaed6fbb9bu.australiacentral-01.azurewebsites.net/api";
-
+  db;
   controller;
   errorHandler = new ErrorHandler();
   isAuthPage: boolean;
 
   constructor(props: any, isAuthPage = false) {
+    this.db = getFirestore(app);
     if (props) this.controller = props;
     this.isAuthPage = isAuthPage;
   }
 
-  request = (method: string, endpoint = "", data = null, config = {}) => {
-    const url = `${this.baseURL}${
-      this.controller ? `/${this.controller}` : ""
-    }${endpoint ? `/${endpoint}` : ""}`;
+  async request(method: string, endpoint = "", data: any = null) {
+    try {
+      if (!this.controller) throw new Error("No controller defined");
 
-    return new Promise((resolve, reject) => {
-      axios({ method, url, data, ...config })
-        .then((result: any) => {
-          resolve(result.data);
-        })
-        .catch((error: any) => {
-          const errorResponse = this.errorHandler.handleApiError(
-            error,
-            this.isAuthPage
-          );
-          resolve(errorResponse);
-        });
-    });
-  };
+      const ref = endpoint ? doc(this.db, this.controller, endpoint) : collection(this.db, this.controller);
+
+      switch (method.toLowerCase()) {
+        case "post":
+          if (!data || !data.id) throw new Error("Data must have an 'id' field");
+          await setDoc(doc(this.db, this.controller, data.id), data);
+          return { success: true, message: "Data added successfully" };
+
+        case "put":
+          if (!data || !data.id) throw new Error("Data must have an 'id' field");
+          await updateDoc(doc(this.db, this.controller, data.id), data);
+          return { success: true, message: "Data updated successfully" };
+
+        case "get":
+          if (endpoint) {
+            const docSnap = await getDoc(ref as any);
+            return docSnap.exists() ? docSnap.data() : { error: "Not found" };
+          } else {
+            const querySnapshot = await getDocs(ref as any);
+            return querySnapshot.docs.map((doc: any) => ({ id: doc.id, ...doc.data() }));
+          }
+
+        case "delete":
+          if (!endpoint) throw new Error("Endpoint (Document ID) is required for deletion");
+          await deleteDoc(ref as any);
+          return { success: true, message: "Data deleted successfully" };
+
+        default:
+          throw new Error("Invalid method");
+      }
+    } catch (error) {
+      return this.errorHandler.handleApiError(error, this.isAuthPage);
+    }
+  }
 
   post = (data: any, endpoint = "") => this.request("post", endpoint, data);
 
@@ -42,6 +61,5 @@ export default class ApiService {
 
   getById = (id: any) => this.request("get", id);
 
-  delete = (payload: any, endpoint = "") =>
-    this.request("delete", endpoint, null, { data: payload });
+  delete = (id: any) => this.request("delete", id);
 }

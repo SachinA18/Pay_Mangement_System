@@ -22,7 +22,7 @@ const TopNav: React.FC = () => {
       label: "SALES",
       icon: "pi pi-shopping-cart",
       items: [
-        { label: "Sales Dashboard", command: () => navigate("/sales/dashboard") },
+        { label: "Sales Dashboard", command: () => navigate("/sales-dashboard") },
         { label: "Invoices", command: () => navigate("/invoices") },
         { label: "Quotes", command: () => navigate("/quotations") },
         { label: "Create New Invoice", command: () => navigate("/invoice-form/00000000-0000-0000-0000-000000000000") },
@@ -108,7 +108,7 @@ const TopNav: React.FC = () => {
       className="flex align-items-center gap-2 mr-4 cursor-pointer"
       onClick={() => navigate("/dashboard")}
     >
-      <div className="text-5xl text-primary font-semibold">calculx</div>
+      <div className="text-5xl text-primary font-semibold">CALSYS</div>
     </div>
   );
 

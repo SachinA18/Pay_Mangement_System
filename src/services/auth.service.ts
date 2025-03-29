@@ -1,57 +1,53 @@
-import axios from "axios";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { app } from "./firebase.config";
+
+const auth = getAuth(app);
 
 export function setAuthorizationToken() {
-  const token = localStorage.getItem("jwt");
-
-  if (token) {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    axios.defaults.headers.common["Accept"] = `application/json`;
-  } else {
-    delete axios.defaults.headers.common["Authorization"];
-  }
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      user.getIdToken().then((token) => {
+        localStorage.setItem("jwt", token);
+      });
+    } else {
+      localStorage.removeItem("jwt");
+    }
+  });
 }
 
 export function isRouteAuthorized(prop: any) {
+  const role = sessionStorage.getItem("Role");
+
   if (prop.layout === "All") {
     return true;
   }
-  if (
-    prop.layout === sessionStorage.Role &&
-    sessionStorage.Role === "Supervisor"
-  ) {
+  if (prop.layout === role && role === "Supervisor") {
     return true;
   }
-  if (prop.layout === sessionStorage.Role && sessionStorage.Role === "Teller") {
+  if (prop.layout === role && role === "Teller") {
     return (
-      prop.name === "Shift" || prop.name === "Reports" || sessionStorage.ShiftId
+      prop.name === "Shift" || prop.name === "Reports" || sessionStorage.getItem("ShiftId")
     );
   }
   return false;
 }
 
-export function setSession(jwt: any) {
-  localStorage.setItem("jwt", jwt);
-
-  const claims = parseJwt(jwt);
-
-  localStorage.setItem("userId", claims.UserId);
-  localStorage.setItem("role", claims.Role || "");
-  localStorage.setItem("tenantId", claims.TenantId);
-  localStorage.setItem("firstName", claims.FirstName || "");
-  localStorage.setItem("lastName", claims.LastName || "");
-  localStorage.setItem("email", claims.Email || "");
+export function setSession(user: any) {
+  if (user) {
+    localStorage.setItem("userId", user.uid);
+    localStorage.setItem("email", user.email || "");
+    user.getIdTokenResult().then((idTokenResult: any) => {
+      localStorage.setItem("role", idTokenResult.claims.role || "");
+      localStorage.setItem("tenantId", idTokenResult.claims.tenantId || "");
+      localStorage.setItem("firstName", idTokenResult.claims.firstName || "");
+      localStorage.setItem("lastName", idTokenResult.claims.lastName || "");
+    });
+  } else {
+    localStorage.clear();
+  }
 }
 
-function parseJwt(token: any) {
-  const base64Url = token.split(".")[1];
-  const base64 = base64Url.replace(/-/gu, "+").replace(/_/gu, "/");
-  const jsonPayload = decodeURIComponent(
-    atob(base64)
-      .split("")
-      .map(function (c) {
-        return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-      })
-      .join("")
-  );
-  return JSON.parse(jsonPayload);
+export async function logout() {
+  await signOut(auth);
+  localStorage.clear();
 }
