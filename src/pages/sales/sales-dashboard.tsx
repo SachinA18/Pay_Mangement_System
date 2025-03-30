@@ -4,6 +4,8 @@ import { ProgressBar } from "primereact/progressbar";
 import { Card } from "primereact/card";
 import { Knob } from "primereact/knob";
 import { Tag } from "primereact/tag";
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
 
 const SalesDashboard: React.FC = () => {
     const barChartData = {
@@ -27,6 +29,14 @@ const SalesDashboard: React.FC = () => {
             y: { beginAtZero: true, max: 300 },
         },
     };
+
+    const salesData = [
+        { id: 1, customer: "John Doe", amount: "$3,200", status: "Closed" },
+        { id: 2, customer: "Jane Smith", amount: "$4,500", status: "Pending" },
+        { id: 3, customer: "Michael Brown", amount: "$2,800", status: "Closed" },
+        { id: 4, customer: "Emily Johnson", amount: "$3,750", status: "Pending" },
+        { id: 5, customer: "Robert Williams", amount: "$5,600", status: "Closed" },
+    ];
 
     return (
         <div className="p-6" style={{ minHeight: "100vh" }}>
@@ -60,6 +70,22 @@ const SalesDashboard: React.FC = () => {
                 </div>
 
                 <div className="col-12 md:col-6 lg:col-4">
+                    <Card className="text-center shadow-3 border-round p-4 surface-card" style={{ height: "330px" }}>
+                        <h2 className="text-4xl">$6,332</h2>
+                        <p className="text-sm">Avg deal value</p>
+                        <h2 className="text-4xl">32d</h2>
+                        <p className="text-sm">Avg cycle length</p>
+                    </Card>
+                </div>
+
+                <div className="col-12 md:col-6 lg:col-4">
+                    <Card title="Close Ratio" className="text-center shadow-3 border-round p-4 surface-card" style={{ height: "330px" }}>
+                        <Knob value={25} valueColor=" #0e94ed" rangeColor=" #e8e9eb" />
+                        <p className="text-xl mt-2">25%</p>
+                    </Card>
+                </div>
+
+                <div className="col-12 md:col-6 lg:col-12 mr-4">
                     <Card title="Performance this quarter" className="overflow-hidden shadow-3 border-round p-4 surface-card">
                         <div className="mb-3">
                             <span>Prospects</span>
@@ -89,21 +115,17 @@ const SalesDashboard: React.FC = () => {
                     </Card>
                 </div>
 
-                <div className="col-12 md:col-6 lg:col-4">
-                    <Card className="text-center shadow-3 border-round p-4 surface-card" style={{ height: "330px" }}>
-                        <h2 className="text-4xl">$6,332</h2>
-                        <p className="text-sm">Avg deal value</p>
-                        <h2 className="text-4xl">32d</h2>
-                        <p className="text-sm">Avg cycle length</p>
+                <div className="col-12">
+                    <Card title="Sales Details" className="shadow-3 border-round p-4 surface-card">
+                        <DataTable value={salesData} paginator rows={5} responsiveLayout="scroll">
+                            <Column field="id" header="ID" />
+                            <Column field="customer" header="Customer" />
+                            <Column field="amount" header="Amount" />
+                            <Column field="status" header="Status" />
+                        </DataTable>
                     </Card>
                 </div>
 
-                <div className="col-12 md:col-6 lg:col-4">
-                    <Card title="Close Ratio" className="text-center shadow-3 border-round p-4 surface-card" style={{ height: "330px" }}>
-                        <Knob value={25} valueColor=" #0e94ed" rangeColor=" #e8e9eb" />
-                        <p className="text-xl mt-2">25%</p>
-                    </Card>
-                </div>
             </div>
         </div>
     );
