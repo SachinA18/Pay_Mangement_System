@@ -38,7 +38,7 @@ import SettingsRoutes from "./routes/settings.routes";
 import Bills from "./pages/bills/bill";
 import BillForm from "./pages/bills/bill-form";
 import InvoicePreview from "./pages/invoice/invoice-preview";
-import SalesDashboard from "./pages/sales/dashboard";
+import SalesDashboard from "./pages/sales/sales-dashboard";
 
 function App() {
   return (
