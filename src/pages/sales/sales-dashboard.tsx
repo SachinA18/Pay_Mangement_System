@@ -32,6 +32,7 @@ const SalesDashboard: React.FC = () => {
         <div className="p-6" style={{ minHeight: "100vh" }}>
             <div className="flex font-medium text-2xl">Sales - Dashboard</div>
             <div className="grid mt-3">
+                
                 <div className="col-12 md:col-6 lg:col-4">
                     <Card title="Activities this week" style={{ height: "330px" }} className="shadow-3 border-round p-4 surface-card">
                         <Chart type="bar" data={barChartData} options={barChartOptions} style={{ height: "200px" }} />
