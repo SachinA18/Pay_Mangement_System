@@ -4,7 +4,6 @@ import { ProgressBar } from "primereact/progressbar";
 import { Card } from "primereact/card";
 import { Knob } from "primereact/knob";
 import { Tag } from "primereact/tag";
-import { ColorPicker } from "primereact/colorpicker";
 
 const SalesDashboard: React.FC = () => {
     const barChartData = {
