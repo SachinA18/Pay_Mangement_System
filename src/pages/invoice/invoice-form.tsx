@@ -64,6 +64,53 @@ export default function InvoiceForm() {
   });
 
   useEffect(() => {
+    setTimeout(() => {
+      setContacts([
+        { id: 1, contactName: "John Doe" },
+        { id: 2, contactName: "Jane Smith" },
+        { id: 3, contactName: "Alice Johnson" },
+        { id: 4, contactName: "Bob Brown" },
+      ]);
+    }, 500);
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setCurrencies([
+        { id: 1, currencies: "EURO" },
+        { id: 2, currencies: "DOLLERS" },
+        { id: 3, currencies: "RUPEES" },
+      ]);
+    }, 500);
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setItemsList([
+        { id: 1, itemName: "Laptop", price: 1000 },
+        { id: 2, itemName: "Monitor", price: 300 },
+        { id: 3, itemName: "Keyboard", price: 50 },
+        { id: 4, itemName: "Mouse", price: 25 },
+      ]);
+    }, 500);
+  }, []);
+
+  const handleItemChange = (rowIndex:any, selectedItemId:any) => {
+    const selectedItem = itemsList.find((item) => item.id === selectedItemId);
+    setFormState((prevState) => {
+      const updatedItems = [...prevState.invoiceItems];
+      updatedItems[rowIndex] = {
+        ...updatedItems[rowIndex],
+        itemId: selectedItem ? selectedItem.id : "",
+        itemName: selectedItem ? selectedItem.itemName : "",
+        qty: 1,
+        price: selectedItem ? selectedItem.price : 0,
+      };
+      return { ...prevState, invoiceItems: updatedItems };
+    });
+  };
+
+  useEffect(() => {
     contactService.get().then((res: any) => setContacts(res || []));
     currencyService.get().then((res: any) => setCurrencies(res || []));
     itemService.get().then((res: any) => setItemsList(res || []));
@@ -86,24 +133,6 @@ export default function InvoiceForm() {
   );
 
   const total = formState.lineAmountType === 2 ? subtotal + totalTax : subtotal;
-
-  const handleItemChange = (rowIndex: number, value: string) => {
-    const found = itemsList.find((p) => p.id === value);
-    setFormState((prev) => ({
-      ...prev,
-      invoiceItems: prev.invoiceItems.map((item, idx) =>
-        idx === rowIndex && found
-          ? {
-            ...item,
-            itemId: found.id,
-            description: found.description,
-            price: found.salePrice ?? 100,
-            taxRate: found.taxRate ?? 0,
-          }
-          : item
-      ),
-    }));
-  };
 
   const handleQtyChange = (rowIndex: number, value: number) => {
     setFormState((prev) => ({
@@ -473,7 +502,7 @@ export default function InvoiceForm() {
                   value={formState.currencyId}
                   options={currencies}
                   className="w-25rem"
-                  optionLabel="name"
+                  optionLabel="currencies"
                   optionValue="id"
                   onChange={(e) =>
                     setFormState((prev) => ({ ...prev, currencyId: e.value }))
@@ -557,23 +586,20 @@ export default function InvoiceForm() {
           size="small"
         >
           <Column rowReorder />
-          {fields.tableFields.item && (
-            <Column
-              header="Item"
-              body={(rowData, opt) => (
+            {fields.tableFields.item && (
+              <Column header="Item" body={(rowData, opt) => (
                 <Dropdown
                   value={rowData.itemId}
                   options={itemsList}
-                  optionLabel="name"
+                  optionLabel="itemName"
                   optionValue="id"
                   onChange={(e) => handleItemChange(opt.rowIndex, e.value)}
                   placeholder="Select an item"
                   className="w-full border-none"
                   showClear
                 />
-              )}
-            />
-          )}
+              )} />
+            )}
           {fields.tableFields.description && (
             <Column
               header="Description"

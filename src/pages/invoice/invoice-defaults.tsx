@@ -1,11 +1,12 @@
 export const defaultGUID = "00000000-0000-0000-0000-000000000000";
 
 export const defaultInvoiceItem = {
-  id: defaultGUID,
-  InvoiceId: defaultGUID,
-  itemId: defaultGUID,
+  id: "",
+  InvoiceId: "",
+  itemId: "",
+  itemName: "",
   description: "",
-  qty: 1,
+  qty: 0,
   price: 0,
   taxRate: 0,
   amount: 0,

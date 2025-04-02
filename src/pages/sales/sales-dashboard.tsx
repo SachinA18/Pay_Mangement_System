@@ -116,7 +116,7 @@ const SalesDashboard: React.FC = () => {
                 </div>
 
                 <div className="col-12">
-                    <Card title="Sales Details" className="shadow-3 border-round p-4 surface-card">
+                    <Card title="Sales Details" className="shadow-3 border-round p-4 surface-card text-sm">
                         <DataTable value={salesData} paginator rows={5} responsiveLayout="scroll">
                             <Column field="id" header="ID" />
                             <Column field="customer" header="Customer" />
@@ -125,7 +125,6 @@ const SalesDashboard: React.FC = () => {
                         </DataTable>
                     </Card>
                 </div>
-
             </div>
         </div>
     );
